@@ -566,8 +566,10 @@ The LIGHTENPERCENT parameter may be negative, which darkens the color."
   (when (and (string= calc-language "latex")
              (string= "*Calculator*" (buffer-name)))
     (goto-char (point-min))
-                                        ; Skip the header line "--- Emacs Calculator Mode ---"
-    (forward-line 1)
+    ;; Modern Emacs calc (29+) uses header-line-format for the separator,
+    ;; not buffer text. Only skip the first line if it is the old text header.
+    (when (looking-at "^-+ *Emacs Calculator")
+      (forward-line 1))
     (while (not (eobp))
       (calctex--overlay-line)
       (forward-line 1))))
